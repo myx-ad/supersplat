@@ -1,5 +1,7 @@
 import { Vec3 } from "playcanvas";
 import { Scene } from "../scene"
+import { Splat } from "src/splat";
+import { addSplatToScene } from "./myx-operations";
 
 const directionToAzimElev = (dir: {x: number, y:number, z:number}) => {
     // Normalize input (optional but good practice)
@@ -18,37 +20,16 @@ const directionToAzimElev = (dir: {x: number, y:number, z:number}) => {
     return { azim, elev };
 }
 
-const convertYUpToZUp = (dir: {x: number, y:number, z:number}) => {
-    return new Vec3([
-        dir.x,
-        -dir.z,
-        dir.y
-    ]);
-}
-
-const convertZUpToYUp = (dir: {x: number, y:number, z:number}) => {
-    return new Vec3([
-        dir.x,
-        dir.z,
-        -dir.y
-    ]);
-}
-
-//@ts-ignore
-window.setRemappedAzimElev = (scene:any, azim:any, elev:any, topAzim = 0, topElev = 90) => {
-
-}
 
 const cameraUpdate = (scene: Scene, data: any) => {
     const pos = new Vec3(data.pos);
     let dir = new Vec3(data.dir);
-    dir = convertZUpToYUp(dir)
 
-    // const target = pos.clone().add(dir);
-    // scene.camera.setPose(pos, target, 0);
+    const target = pos.clone().add(dir);
+    scene.camera.setPose(pos, target, 0);
 
-    const { azim, elev } = directionToAzimElev(dir);
-    scene.camera.setAzimElev(azim, elev, 0);
+    // const { azim, elev } = directionToAzimElev(dir);
+    // scene.camera.setAzimElev(azim, elev, 0);
 }
 
 const toggleUi = () => {
@@ -75,15 +56,13 @@ const toggleUi = () => {
 }
 
 const addSplat = (scene: Scene, data: any) => {
-    console.log(data.path);
     setTimeout(async () => {
-        // await zip.file(`splat_${i}.ply`).async('blob');
         const url = URL.createObjectURL(new Blob([data.tile]));
-        const model = await scene.assetLoader.loadModel({
+        const splat = await scene.assetLoader.loadModel({
             url: url,
             filename: data.path
         })
-        scene.add(model);
+        addSplatToScene(scene, splat);
     }, 0);
 }
 

@@ -10,6 +10,7 @@ const myxConfig = {
     showViewCube: () => { return true || !myxConfig.enabled },
     showTimelinePanel: () => { return false || !myxConfig.enabled },
     showMyxPanel: () => { return true || !myxConfig.enabled },
+    zUp: true,
     scene: {
         bulkLoad: {
             enabled: false,

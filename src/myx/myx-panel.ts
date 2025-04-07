@@ -22,15 +22,18 @@ const setUpdateDataTransferredInterval = (labelRegistry: Label, labelTraffic: La
 
     setInterval(() => {
         //@ts-ignore
-        let registry = window.assetLoader.registry;
-        if (registry._assets.size == 0) {
+        const registry = window.scene.assetLoader.registry;
+        //@ts-ignore
+        const assets = registry._assets;
+
+        if (assets.size == 0) {
             labelRegistry.value = "0 MB";
             labelTraffic.value = "0 MB";
             return;
         }
         
         let sizeRegistry = 0;
-        for (const asset of registry._assets.values()) {
+        for (const asset of assets.values()) {
             const assetSize = getAssetSize(asset);
             sizeRegistry += assetSize;
 
