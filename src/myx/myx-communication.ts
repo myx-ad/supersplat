@@ -2,6 +2,7 @@ import { Vec3 } from "playcanvas";
 import { Scene } from "../scene"
 import { Splat } from "src/splat";
 import { addSplatToScene } from "./myx-operations";
+import { superSplatVisibleElements } from "./myx-ui-configuration";
 
 const directionToAzimElev = (dir: {x: number, y:number, z:number}) => {
     // Normalize input (optional but good practice)
@@ -32,26 +33,25 @@ const cameraUpdate = (scene: Scene, data: any) => {
     // scene.camera.setAzimElev(azim, elev, 0);
 }
 
-const toggleUi = () => {
-    const uiElementIds = ['data-panel', 'timeline-panel',
-        'myx-panel', 'bottom-toolbar', 'right-toolbar',
-        'mode-toggle', 'view-cube-container', 'scene-panel'
-    ];
+const toggleUi = (data:any) => {
+    const show = data.show;
 
-    function toggleDisplay(element: any) {
-        if (element.style.display === 'none' || getComputedStyle(element).display === 'none') {
+    function toggleDisplay(element: any, show: any) {
+        if (show) {
             element.style.display = 'block';
         } else {
             element.style.display = 'none';
         }
     }
 
-    for (const id of uiElementIds) {
+    for (const id of Object.keys(superSplatVisibleElements)) {
         const element = document.getElementById(id);
-        if (!element) {
+        //@ts-ignore
+        if (!element || !superSplatVisibleElements[id]) {
             continue;
         }
-        toggleDisplay(element);
+
+        toggleDisplay(element, show);
     }
 }
 
@@ -80,7 +80,7 @@ const setupMessageHandlers = (scene: Scene) => {
             }
 
             if (command.name === "toggleUi") {
-                toggleUi();
+                toggleUi(command.data);
             }
         } catch (e) {
             console.log("Received non-JSON message", e);
