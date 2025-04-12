@@ -101,7 +101,7 @@ const configureStandaloneMode = (scene: Scene) => {
             l3 = level3;
         });
 
-    scene.camera.onUpdate = function (args) {
+    scene.camera.onUpdate = async function (args) {
         if (typeof updateOld === "function") {
             updateOld.call(this, args);
         }
@@ -144,6 +144,17 @@ const configureStandaloneMode = (scene: Scene) => {
             }
 
             bulkLoad(scene, srcData, loadedTiles);
+
+            // For high res - use this, as sometimes the browser can't handle the amount of requests (~1k) and throws errors
+            // function sleep(ms:number) {
+            //     return new Promise(resolve => setTimeout(resolve, ms));
+            //   }
+
+            // for (let i = srcData.length - 1; i >= 1500; i -= 100) {
+            //     const dataToLoad = srcData.slice(i - 100, i);
+            //     await sleep(2000);
+            //     bulkLoad(scene, dataToLoad, loadedTiles);
+            // }
         }
     };
 }

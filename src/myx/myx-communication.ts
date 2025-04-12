@@ -1,7 +1,7 @@
 import { Vec3 } from "playcanvas";
 import { Scene } from "../scene"
 import { Splat } from "src/splat";
-import { addSplatToScene } from "./myx-operations";
+import { addSplatToScene, applyRotationMatrix, calculateRotationMatrixToY } from "./myx-operations";
 import { superSplatVisibleElements } from "./myx-ui-configuration";
 
 const directionToAzimElev = (dir: {x: number, y:number, z:number}) => {
@@ -23,11 +23,19 @@ const directionToAzimElev = (dir: {x: number, y:number, z:number}) => {
 
 
 const cameraUpdate = (scene: Scene, data: any) => {
-    const pos = new Vec3(data.pos);
-    let dir = new Vec3(data.dir);
+    // const ecefPos = new Vec3(data.pos);
+    const ecefCenter = data.ecefCenter;
+
+    const yUpRotMatrix = calculateRotationMatrixToY([ecefCenter.x, ecefCenter.y, ecefCenter.z]);
+    const dir = new Vec3(applyRotationMatrix(yUpRotMatrix, data.dir));
+    let pos = new Vec3(applyRotationMatrix(yUpRotMatrix, data.pos));
+
+    const cameraOffset = new Vec3(data.offset);
+    pos = pos.add(cameraOffset);
 
     const target = pos.clone().add(dir);
     scene.camera.setPose(pos, target, 0);
+    scene.camera.fov = data.fov * (180 / Math.PI);
 
     // const { azim, elev } = directionToAzimElev(dir);
     // scene.camera.setAzimElev(azim, elev, 0);

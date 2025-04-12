@@ -5,7 +5,12 @@ import { SceneConfig } from '../scene-config';
 import { Asset } from 'playcanvas';
 import { myxConfig } from './myx-config';
 
-const setUpdateDataTransferredInterval = (labelRegistry: Label, labelTraffic: Label, tilesLoadedLabel: Label) => {
+const setUpdateDataTransferredInterval = (
+    labelRegistry: Label, 
+    labelTraffic: Label, 
+    tilesLoadedLabel: Label,
+    cameraPositionLabel: Label
+) => {
     const totalAssetsTransferredMap = {};
 
     const getAssetSize = (asset: Asset) => {
@@ -60,6 +65,9 @@ const setUpdateDataTransferredInterval = (labelRegistry: Label, labelTraffic: La
             const l3Loaded = loadedTiles.filter((x:string) => x.includes("high")).length;
             tilesLoadedLabel.value = `L1:${l1Loaded}/${lod.l1.length} L2:${l2Loaded}/${lod.l2.length} L3:${l3Loaded}/${lod.l3.length}`
         }
+
+        const cameraPos = window.scene.camera.entity.getPosition();
+        cameraPositionLabel.value = `${cameraPos.x.toFixed(2)} ${cameraPos.y.toFixed(2)} ${cameraPos.z.toFixed(2)}`;
     }, 500);
 }
 
@@ -117,8 +125,12 @@ class MyxPanel extends Container {
         dataContainer.append(new Label({text: "Tiles loaded"}));
         const tilesLoadedLabel = new Label({text: "None"});
         dataContainer.append(tilesLoadedLabel);
+        dataContainer.append(new Divider);
+        dataContainer.append(new Label({text: "Camera position"}));
+        const cameraPositionLabel = new Label({text: "None"});
+        dataContainer.append(cameraPositionLabel);
 
-        setUpdateDataTransferredInterval(registrySizeLabel, totalDataTransferredLabel, tilesLoadedLabel);
+        setUpdateDataTransferredInterval(registrySizeLabel, totalDataTransferredLabel, tilesLoadedLabel, cameraPositionLabel);
 
         const bulkLoadButton = new Button({ text: 'Bulk Load', class: 'select-toolbar-button' });
         const bulkLoadLevelInput = new TextInput();
