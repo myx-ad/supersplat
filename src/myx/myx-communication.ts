@@ -75,7 +75,6 @@ const toggleUi = () => {
 }
 
 const addSplat = (scene: Scene, data: any) => {
-    console.log(data.path);
     setTimeout(async () => {
         // await zip.file(`splat_${i}.ply`).async('blob');
         const url = URL.createObjectURL(new Blob([data.tile]));
