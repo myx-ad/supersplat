@@ -125,17 +125,8 @@ class EditorUI {
             canvasContainer.append(appLabel);
         } 
 
-        // if (config.myx.showMyxPanel()) {
-        //     const myxPanel = new MyxPanel(events, config);
-        //     canvasContainer.append(myxPanel);
-        // }
-
         canvasContainer.append(cursorLabel);
         canvasContainer.append(toolsContainer);
-
-        // if (config.myx.showScenePanel()) {
-        //     canvasContainer.append(scenePanel);
-        // }
 
         canvasContainer.append(viewPanel);
         canvasContainer.append(colorPanel);
@@ -147,10 +138,6 @@ class EditorUI {
         if (config.myx.showRightToolbar()) {
             canvasContainer.append(rightToolbar);
         }
-
-        // if (config.myx.showModeToggle()) {
-        //     canvasContainer.append(modeToggle);
-        // }
 
         if (config.myx.showMenu()) {
             canvasContainer.append(menu);
@@ -178,9 +165,6 @@ class EditorUI {
         if (config.myx.showTimelinePanel()) {
             mainContainer.append(timelinePanel);
         }
-        // if (config.myx.showDataPanel()) {
-        //     mainContainer.append(dataPanel);
-        // }
 
         editorContainer.append(mainContainer);
 
