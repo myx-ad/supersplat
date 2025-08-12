@@ -9,7 +9,7 @@ For tiling:
 - Create tiled structure for a twin using the tiling scripts in jupyter
 - Download the structure locally
 - Start http-server in the place where the tiling files are stored
-- The http-server should run on port 8080. The supersplat config for the http-server is visible under rollup.conmfig.mjs - check it there
+- The http-server should run on port 4001. The supersplat config for the http-server is visible under rollup.config.mjs - check it there
 
 # SuperSplat - 3D Gaussian Splat Editor
 
@@ -46,7 +46,7 @@ To initialize a local development environment for SuperSplat, ensure you have [N
    npm run develop
    ```
 
-4. Open a web browser at `http://localhost:3000`.
+4. Open a web browser at `http://localhost:4000`.
 
 When changes to the source are detected, SuperSplat is rebuilt automatically. Simply refresh your browser to see your changes.
 

@@ -1,5 +1,6 @@
-import { Vec3 } from "playcanvas";
-import { Scene } from "../scene"
+import { Vec3 } from 'playcanvas';
+
+import { Scene } from '../scene';
 
 const directionToAzimElev = (dir: {x: number, y:number, z:number}) => {
     // Normalize input (optional but good practice)
@@ -16,7 +17,7 @@ const directionToAzimElev = (dir: {x: number, y:number, z:number}) => {
     const elev = Math.asin(y) * (180 / Math.PI); // y is the "up" direction
 
     return { azim, elev };
-}
+};
 
 const convertYUpToZUp = (dir: {x: number, y:number, z:number}) => {
     return new Vec3([
@@ -24,7 +25,7 @@ const convertYUpToZUp = (dir: {x: number, y:number, z:number}) => {
         -dir.z,
         dir.y
     ]);
-}
+};
 
 const convertZUpToYUp = (dir: {x: number, y:number, z:number}) => {
     return new Vec3([
@@ -32,30 +33,29 @@ const convertZUpToYUp = (dir: {x: number, y:number, z:number}) => {
         dir.z,
         -dir.y
     ]);
-}
+};
 
-//@ts-ignore
+// @ts-ignore
 window.setRemappedAzimElev = (scene:any, azim:any, elev:any, topAzim = 0, topElev = 90) => {
 
-}
+};
 
 const cameraUpdate = (scene: Scene, data: any) => {
     const pos = new Vec3(data.pos);
     let dir = new Vec3(data.dir);
-    dir = convertZUpToYUp(dir)
+    dir = convertZUpToYUp(dir);
 
     const target = pos.clone().add(dir);
     scene.camera.setPose(pos, target, 0);
- 
+
     const { azim, elev } = directionToAzimElev(dir);
     scene.camera.setAzimElev(azim, elev, 0);
-}
+};
 
 const toggleUi = () => {
     const uiElementIds = ['data-panel', 'timeline-panel',
         'myx-panel', 'bottom-toolbar', 'right-toolbar',
-        'mode-toggle', 'view-cube-container', 'scene-panel'
-    ];
+        'mode-toggle', 'view-cube-container', 'scene-panel'];
 
     function toggleDisplay(element: any) {
         if (element.style.display === 'none' || getComputedStyle(element).display === 'none') {
@@ -72,7 +72,7 @@ const toggleUi = () => {
         }
         toggleDisplay(element);
     }
-}
+};
 
 const addSplat = (scene: Scene, data: any) => {
     setTimeout(async () => {
@@ -81,33 +81,33 @@ const addSplat = (scene: Scene, data: any) => {
         const model = await scene.assetLoader.loadModel({
             url: url,
             filename: data.path
-        })
+        });
         scene.add(model);
     }, 0);
-}
+};
 
 
 const setupMessageHandlers = (scene: Scene) => {
-    window.addEventListener("message", (event) => {
+    window.addEventListener('message', (event) => {
         try {
             const command = event.data;
-            if (command.name === "cameraUpdate") {
+            if (command.name === 'cameraUpdate') {
                 cameraUpdate(scene, command.data);
             }
 
-            if (command.name === "addSplat") {
+            if (command.name === 'addSplat') {
                 addSplat(scene, command.data);
             }
 
-            if (command.name === "toggleUi") {
+            if (command.name === 'toggleUi') {
                 toggleUi();
             }
         } catch (e) {
-            console.log("Received non-JSON message", e);
+            console.log('Received non-JSON message', e);
         }
     });
-}
+};
 
 export {
     setupMessageHandlers
-}
+};

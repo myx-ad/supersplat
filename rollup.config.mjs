@@ -117,11 +117,11 @@ const application = {
         BUILD_TYPE !== 'debug' && terser(),
         dev({
             dirs: ['dist'],
-            port: 3000, // Serve on localhost:3000
+            port: 4000, // Serve on localhost:4000
             proxy: [
                 {
-                    from: '/tiles', // Requests starting with "/api"
-                    to: 'http://localhost:8080' // Redirect to backend
+                    from: '/tiles', // Requests starting with "/tiles"
+                    to: 'http://localhost:4001' // Redirect to tile backend
                 }
             ]
         })

@@ -39,12 +39,24 @@ const sceneConfig = {
     },
     myx: {
         enabled: true,
-        showGrid: () => { return false || !sceneConfig.myx.enabled },
-        showMenu:  () => { return false || !sceneConfig.myx.enabled },
-        showBottomToolbar:  () => { return false || !sceneConfig.myx.enabled },
-        showRightToolbar:  () => { return false || !sceneConfig.myx.enabled },
-        showViewCube: () => { return true || !sceneConfig.myx.enabled },
-        showTimelinePanel: () => { return false || !sceneConfig.myx.enabled },
+        showGrid: () => {
+            return false || !sceneConfig.myx.enabled;
+        },
+        showMenu: () => {
+            return false || !sceneConfig.myx.enabled;
+        },
+        showBottomToolbar: () => {
+            return false || !sceneConfig.myx.enabled;
+        },
+        showRightToolbar: () => {
+            return false || !sceneConfig.myx.enabled;
+        },
+        showViewCube: () => {
+            return true || !sceneConfig.myx.enabled;
+        },
+        showTimelinePanel: () => {
+            return false || !sceneConfig.myx.enabled;
+        },
         scene: {
             bulkLoad: {
                 enabled: false,

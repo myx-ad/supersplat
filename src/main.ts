@@ -6,6 +6,7 @@ import { EditHistory } from './edit-history';
 import { registerEditorEvents } from './editor';
 import { Events } from './events';
 import { initFileHandler } from './file-handler';
+import { myx_main } from './myx/myx-main';
 import { registerPlySequenceEvents } from './ply-sequence';
 import { registerPublishEvents } from './publish';
 import { Scene } from './scene';
@@ -24,7 +25,6 @@ import { SphereSelection } from './tools/sphere-selection';
 import { ToolManager } from './tools/tool-manager';
 import { registerTransformHandlerEvents } from './transform-handler';
 import { EditorUI } from './ui/editor';
-import { myx_main } from './myx/myx-main';
 
 declare global {
     interface LaunchParams {
@@ -196,7 +196,7 @@ const main = async () => {
 
     events.on('bgClr', (clr: Color) => {
         const cnv = (v: number) => `${Math.max(0, Math.min(255, (v * 255))).toFixed(0)}`;
-        document.body.style.backgroundColor = `rgba(255, 255, 255, 0)`;
+        document.body.style.backgroundColor = 'rgba(255, 255, 255, 0)';
     });
     events.on('selectedClr', (clr: Color) => {
         scene.forceRender = true;
