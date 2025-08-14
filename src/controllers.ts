@@ -101,7 +101,7 @@ class PointerController {
                 } else if (buttons[1]) { // Middle button
                     orbit(dx, dy);
                 } else if (buttons[2]) { // Right button
-                    zoom(dy * -0.02);
+                    zoom(dy * 0.02);
                 }
             } else {
                 if (touches.length === 1) {
