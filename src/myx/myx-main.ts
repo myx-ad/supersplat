@@ -1,14 +1,15 @@
-import { Vec3 } from "playcanvas";
-import { Events } from "../events";
-import { Scene, SceneConfig } from "../scene";
-import { setupMessageHandlers } from "./myx-communication";
+import { Vec3 } from 'playcanvas';
+
+import { Events } from '../events';
+import { Scene, SceneConfig } from '../scene';
+import { setupMessageHandlers } from './myx-communication';
 
 
 function extractLevels(data: any) {
     return {
         level1: data,
         level2: data.map((x: any) => x.children).flat(),
-        level3: data.map((x: any) => x.children.map((y:any) => y.children)).flat().flat() 
+        level3: data.map((x: any) => x.children.map((y:any) => y.children)).flat().flat()
     };
 }
 
@@ -16,14 +17,14 @@ const addTileToScene = async (scene: Scene, path: string) => {
     setTimeout(async () => {
         const animationFrame = false;
         const url = `/tiles/${path}`;
-        const model = await scene.assetLoader.loadModel({ url, filename:path, animationFrame });
+        const model = await scene.assetLoader.loadModel({ url, filename: path, animationFrame });
         scene.add(model);
     }, 0);
-}
+};
 
 async function bulkLoad(scene: Scene, tiles: any[], loaded: string[]) {
     const paths = tiles.map((x:any) => x.path);
-    for (let path of paths) {
+    for (const path of paths) {
         if (loaded.includes(path)) {
             continue;
         }
@@ -39,7 +40,7 @@ const positionChanged = (oldPos:any, newPos:any) => {
     }
 
     return oldPos.x !== newPos.x || oldPos.y !== newPos.y || oldPos.z !== newPos.z;
-}
+};
 
 const dist = (arr1: number[], arr2: number[]) => {
     return Math.sqrt((arr1[0] - arr2[0]) ** 2 + (arr1[1] - arr2[1]) ** 2 + (arr1[2] - arr2[2]) ** 2);
@@ -49,40 +50,40 @@ const dist = (arr1: number[], arr2: number[]) => {
 const filterCloserTiles = (position: any, data:any[], threshold:number) => {
     return data.filter((tile: any) => {
         const distance = dist([position.x, position.y, position.z], tile.center);
-        return distance < threshold
-    })
-}
+        return distance < threshold;
+    });
+};
 
 const myx_main = async (scene: Scene, config: SceneConfig, events: Events) => {
-    let [l1, l2, l3]:any = [null, null, null];
+    const [l1, l2, l3]:any = [null, null, null];
 
-    let updateOld = scene.camera.onUpdate;
-    let oldPos: any = undefined;
+    const updateOld = scene.camera.onUpdate;
+    let oldPos: any;
     let bulkLoaded = false;
 
-    let loadedTiles: string[] = [];
-    //@ts-ignore
+    const loadedTiles: string[] = [];
+    // @ts-ignore
     window.loadedTiles = loadedTiles;
 
     scene.camera.onUpdate = function (args) {
-        if (typeof updateOld === "function") {
-            updateOld.call(this, args); 
+        if (typeof updateOld === 'function') {
+            updateOld.call(this, args);
         }
-        
-        let newPos = this.entity.getPosition();
+
+        const newPos = this.entity.getPosition();
         if (positionChanged(oldPos, newPos)) {
-            oldPos = { x: newPos.x, y:newPos.y, z:newPos.z}
-            
+            oldPos = { x: newPos.x, y: newPos.y, z: newPos.z };
+
             if (config.myx.scene.cameraLoad.enabled) {
                 const l1_thresh = config.myx.scene.cameraLoad.l1Distance;
                 const l2_thresh = config.myx.scene.cameraLoad.l2Distance;
                 const l3_thresh = config.myx.scene.cameraLoad.l3Distance;
-                
-                let cameraPos = scene.camera.entity.getPosition();
+
+                const cameraPos = scene.camera.entity.getPosition();
                 const l1_tiles = filterCloserTiles(cameraPos, l1, l1_thresh);
                 const l2_tiles = filterCloserTiles(cameraPos, l2, l2_thresh);
                 const l3_tiles = filterCloserTiles(cameraPos, l3, l3_thresh);
-    
+
                 bulkLoad(scene, l1_tiles, loadedTiles);
                 bulkLoad(scene, l2_tiles, loadedTiles);
                 bulkLoad(scene, l3_tiles, loadedTiles);
@@ -93,7 +94,7 @@ const myx_main = async (scene: Scene, config: SceneConfig, events: Events) => {
             bulkLoaded = true;
             let srcData = null;
 
-            switch(config.myx.scene.bulkLoad.level) {
+            switch (config.myx.scene.bulkLoad.level) {
                 case 1:
                     srcData = l1;
                     break;
@@ -127,6 +128,6 @@ const myx_main = async (scene: Scene, config: SceneConfig, events: Events) => {
     events.fire('camera.toggleOverlay');
 
     setupMessageHandlers(scene);
-}
+};
 
-export { myx_main }
+export { myx_main };

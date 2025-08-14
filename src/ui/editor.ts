@@ -1,6 +1,8 @@
 import { Container, Label } from 'pcui';
 import { Mat4, Vec3 } from 'playcanvas';
 
+import { SceneConfig } from 'src/scene-config';
+
 import { DataPanel } from './data-panel';
 import { Events } from '../events';
 import { BottomToolbar } from './bottom-toolbar';
@@ -21,7 +23,6 @@ import { ViewCube } from './view-cube';
 import { ViewPanel } from './view-panel';
 import { ViewerExportPopup } from './viewer-export-popup';
 import { version } from '../../package.json';
-import { SceneConfig } from 'src/scene-config';
 import { MyxPanel } from '../myx/myx-panel';
 
 class EditorUI {
@@ -123,7 +124,7 @@ class EditorUI {
         canvasContainer.dom.appendChild(canvas);
         if (!config.myx.enabled) {
             canvasContainer.append(appLabel);
-        } 
+        }
 
         canvasContainer.append(cursorLabel);
         canvasContainer.append(toolsContainer);
