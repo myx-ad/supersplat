@@ -95,18 +95,13 @@ class PointerController {
                 x = event.offsetX;
                 y = event.offsetY;
 
-                // right button can be used to orbit with ctrl key and to zoom with alt | meta key
-                const mod = buttons[2] ?
-                    (event.shiftKey || event.ctrlKey ? 'orbit' :
-                        (event.altKey || event.metaKey ? 'zoom' : null)) :
-                    null;
-
-                if (mod === 'orbit' || (mod === null && buttons[0])) {
-                    orbit(dx, dy);
-                } else if (mod === 'zoom' || (mod === null && buttons[1])) {
-                    zoom(dy * -0.02);
-                } else if (mod === 'pan' || (mod === null && buttons[2])) {
+                // Updated behavior: left click pans, middle click orbits, right click zooms
+                if (buttons[0]) { // Left button
                     pan(x, y, dx, dy);
+                } else if (buttons[1]) { // Middle button
+                    orbit(dx, dy);
+                } else if (buttons[2]) { // Right button
+                    zoom(dy * 0.02);
                 }
             } else {
                 if (touches.length === 1) {
@@ -152,7 +147,7 @@ class PointerController {
             } else if (event.shiftKey) {
                 pan(event.offsetX, event.offsetY, deltaX, deltaY);
             } else {
-                orbit(deltaX, deltaY);
+                zoom(deltaY * -0.002);
             }
 
             event.preventDefault();
