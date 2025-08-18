@@ -97,7 +97,11 @@ class PointerController {
 
                 // Updated behavior: left click pans, middle click orbits, right click zooms
                 if (buttons[0]) { // Left button
-                    pan(x, y, dx, dy);
+                    if (event.ctrlKey || event.metaKey) {
+                        orbit(dx, dy);
+                    } else {
+                        pan(x, y, dx, dy);
+                    }
                 } else if (buttons[1]) { // Middle button
                     orbit(dx, dy);
                 } else if (buttons[2]) { // Right button
