@@ -19,7 +19,7 @@ module.exports = {
         production: {
             user: 'platform',
             host: 'maverick',
-            ref: 'origin/master',
+            ref: 'origin/main',
             repo: 'git@github.com:myx-ad/supersplat.git',
             path: '/home/platform/supersplat', // drop trailing slash
             ssh_options: 'ForwardAgent=yes',
