@@ -24,7 +24,7 @@ module.exports = {
             path: '/home/platform/supersplat', // drop trailing slash
             ssh_options: 'ForwardAgent=yes',
             'post-deploy':
-                'npm ci --omit=dev && npm run build && pm2 reload pm2.config.js --env production --update-env',
+                'npm ci && npm run build && pm2 reload pm2.config.js --env production --update-env',
         },
         staging: {
             user: 'user',
