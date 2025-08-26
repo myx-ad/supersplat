@@ -82,13 +82,26 @@ const addSplat = (scene: Scene, data: any) => {
             url: url,
             filename: data.path
         });
+        model.entity.setEulerAngles(-90, 0, 0);
         scene.add(model);
     }, 0);
 };
 
 
 const setupMessageHandlers = (scene: Scene) => {
-    window.addEventListener('message', (event) => {
+    
+    const waitForSplatsToLoad = async (): Promise<void> => {
+        return new Promise((resolve) => {
+            const checkForSplats = setInterval(() => {
+                if (scene.elements.filter(({type}) => type === 'splat').length > 0) {
+                    clearInterval(checkForSplats);
+                    resolve();
+                }
+            }, 100); // Check every 100ms
+        });
+    };
+
+    window.addEventListener('message', async (event) => {
         try {
             const command = event.data;
             if (command.name === 'cameraUpdate') {
@@ -97,6 +110,9 @@ const setupMessageHandlers = (scene: Scene) => {
 
             if (command.name === 'addSplat') {
                 addSplat(scene, command.data);
+                await waitForSplatsToLoad();
+                scene.events.fire('camera.focus');
+                scene.events.fire('camera.bound', false);
             }
 
             if (command.name === 'toggleUi') {
