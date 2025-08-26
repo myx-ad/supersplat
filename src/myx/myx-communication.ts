@@ -82,7 +82,7 @@ const addSplat = (scene: Scene, data: any) => {
             url: url,
             filename: data.path
         });
-        model.entity.setEulerAngles(-90, 0, 0);
+        model.entity.setEulerAngles(-90, 180, 0);
         scene.add(model);
     }, 0);
 };
