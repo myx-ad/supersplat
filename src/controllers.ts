@@ -48,6 +48,19 @@ class PointerController {
         let touches: { id: number, x: number, y: number}[] = [];
         let midx: number, midy: number, midlen: number;
 
+        // simple single click to double click functionality
+        let startX: number, startY: number;
+        const CLICK_THRESHOLD = 5; // pixels - if mouse moved more than this, it's a drag
+        
+        const handleClick = () => {
+            // Check if mouse moved significantly (drag vs click)
+            const movedDistance = Math.sqrt((x - startX) ** 2 + (y - startY) ** 2);
+            if (movedDistance > CLICK_THRESHOLD) {
+                return; // Don't trigger click if it was a drag
+            }
+            camera.pickFocalPoint(x, y);
+        };
+
         const pointerdown = (event: PointerEvent) => {
             if (event.pointerType === 'mouse') {
                 if (buttons.every(b => !b)) {
@@ -56,6 +69,9 @@ class PointerController {
                 buttons[event.button] = true;
                 x = event.offsetX;
                 y = event.offsetY;
+                // Store starting position for click detection
+                startX = event.offsetX;
+                startY = event.offsetY;
             } else if (event.pointerType === 'touch') {
                 if (touches.length === 0) {
                     target.setPointerCapture(event.pointerId);
@@ -79,6 +95,9 @@ class PointerController {
                 buttons[event.button] = false;
                 if (buttons.every(b => !b)) {
                     target.releasePointerCapture(event.pointerId);
+                    if (event.button === 0) {
+                        handleClick();
+                    }
                 }
             } else {
                 touches = touches.filter(touch => touch.id !== event.pointerId);
