@@ -18,8 +18,18 @@ jobs:
   bump:
     runs-on: ubuntu-latest
     steps:
-      - name: Bump version
-        uses: myx-ad/workflows/.github/actions/version-bump@master
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          gh_token: ${{ secrets.GH_PAT }}
-          version-type: ${{ github.event.inputs.version-type }}
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Configure Git bot user
+        run: |
+          git config user.name 'myx-service'
+          git config user.email 'service@myxrobotics.com'
+
+      - name: Bump version
+        run: npm version ${{ github.event.inputs.version-type }}
+
+      - name: Push version changes
+        run: git push --follow-tags
