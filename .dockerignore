@@ -1,0 +1,10 @@
+/node_modules/
+/dist/
+/lib/
+/lib_out/
+/.github/
+/.idea/
+Dockerfile
+.env.example
+*.log
+README.md
