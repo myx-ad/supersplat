@@ -1,0 +1,25 @@
+name: Bump version
+concurrency: bump-version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version-type:
+        description: "Version type"
+        required: true
+        default: 'minor'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bump version
+        uses: myx-ad/workflows/.github/actions/version-bump@master
+        with:
+          gh_token: ${{ secrets.GH_PAT }}
+          version-type: ${{ github.event.inputs.version-type }}
