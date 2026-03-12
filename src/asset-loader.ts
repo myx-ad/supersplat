@@ -105,14 +105,17 @@ class AssetLoader {
         }
 
         return new Promise<Splat>((resolve, reject) => {
+            // PlayCanvas gsplat handler expects url to be a string or an object with .original (see handlers/gsplat.js).
+            const fileOptions = {
+                url: loadRequest.url,
+                filename: loadRequest.filename,
+                contents: loadRequest.contents,
+                original: loadRequest.filename || loadRequest.url
+            };
             const asset = new Asset(
                 loadRequest.filename || loadRequest.url,
                 'gsplat',
-                {
-                    url: loadRequest.url,
-                    filename: loadRequest.filename,
-                    contents: loadRequest.contents
-                },
+                fileOptions as { url?: string; filename?: string; contents?: ArrayBuffer; original?: string },
                 {
                     // decompress data on load
                     decompress: true,
