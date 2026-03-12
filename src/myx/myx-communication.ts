@@ -76,12 +76,13 @@ const toggleUi = () => {
 
 const addSplat = (scene: Scene, data: any) => {
     setTimeout(async () => {
-        // await zip.file(`splat_${i}.ply`).async('blob');
-        const url = URL.createObjectURL(new Blob([data.tile]));
-        const model = await scene.assetLoader.loadModel({
-            url: url,
-            filename: data.path
-        });
+        // Twinviewer sends PLY via postMessage (data.tile = ArrayBuffer). Pass contents directly
+        // so the loader never fetches a URL — avoids blob URL / fetch quirks (e.g. in Docker).
+        const model = await scene.assetLoader.loadModel(
+            data.tile
+                ? { filename: data.path, contents: data.tile }
+                : { url: data.url, filename: data.path },
+        );
         model.entity.setEulerAngles(-90, 180, 0);
         scene.add(model);
     }, 0);
