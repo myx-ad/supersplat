@@ -78,8 +78,9 @@ class Splat extends Element {
     constructor(asset: Asset) {
         super(ElementType.splat);
 
-        const splatResource = asset.resource as GSplatResource;
-        const splatData = splatResource.splatData;
+        // Engine API: resource may be GSplatResource with .splatData, or the GSplatData directly (no wrapper).
+        const splatResource = asset.resource as GSplatResource & { splatData?: GSplatData };
+        const splatData = splatResource.splatData ?? (splatResource as unknown as GSplatData);
 
         // get material options object for a shader that renders with the given number of bands
         const materialOptions = {
