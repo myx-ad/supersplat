@@ -105,17 +105,18 @@ class AssetLoader {
         }
 
         return new Promise<Splat>((resolve, reject) => {
-            // PlayCanvas gsplat handler expects url to be a string or an object with .original (see handlers/gsplat.js).
+            // When loading from in-memory contents, PlayCanvas still needs a non-empty URL string.
+            // If url is null, ResourceLoader uses _loadNull(), and gsplat handler receives null and crashes.
+            const resolvedUrl = loadRequest.url || loadRequest.filename || 'in-memory.ply';
             const fileOptions = {
-                url: loadRequest.url,
+                url: resolvedUrl,
                 filename: loadRequest.filename,
-                contents: loadRequest.contents,
-                original: loadRequest.filename || loadRequest.url
+                contents: loadRequest.contents
             };
             const asset = new Asset(
                 loadRequest.filename || loadRequest.url,
                 'gsplat',
-                fileOptions as { url?: string; filename?: string; contents?: ArrayBuffer; original?: string },
+                fileOptions as { url?: string; filename?: string; contents?: ArrayBuffer },
                 {
                     // decompress data on load
                     decompress: true,
