@@ -1,6 +1,6 @@
 FROM node:22.0-alpine AS builder
 
-ARG BASE_HREF="/supersplat/"
+ARG BASE_HREF=""
 ENV BASE_HREF=$BASE_HREF
 
 RUN apk add --no-cache git
