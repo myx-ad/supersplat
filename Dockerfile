@@ -1,6 +1,6 @@
 FROM node:22.0-alpine AS builder
 
-ARG BASE_HREF=""
+ARG BASE_HREF="/supersplat/"
 ENV BASE_HREF=$BASE_HREF
 
 RUN apk add --no-cache git
@@ -11,10 +11,12 @@ RUN --mount=type=secret,id=npmrc,target=/root/.npmrc NPM_CONFIG_USERCONFIG=/root
 
 RUN npm run build
 
-FROM nginx:alpine
+FROM node:22.0-alpine
 LABEL authors="MYX AD"
 
-ENV MAX_BODY_SIZE="5000M"
-# BACKEND_URL and TILES_BACKEND_URL are set at runtime via docker-compose environment
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
-COPY --from=builder /app/dist /usr/share/nginx/html
+WORKDIR /app
+RUN npm install -g serve
+COPY --from=builder /app/dist /app/dist
+
+EXPOSE 4000
+CMD ["serve", "dist", "-C", "-l", "4000"]
