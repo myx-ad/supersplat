@@ -13,8 +13,8 @@ const setUpdateDataTransferredInterval = (labelRegistry: Label, labelTraffic: La
             return 0;
         }
 
-        const res = asset.resource as { splatData?: { elements: Array<{ properties: Array<{ storage: { byteLength: number } }> }> }; gsplatData?: { elements: Array<{ properties: Array<{ storage: { byteLength: number } }> }> }; elements?: Array<{ properties: Array<{ storage: { byteLength: number } }> }> };
-        const splatData = res.splatData ?? res.gsplatData ?? res;
+        // @ts-ignore
+        const splatData = asset.resource.splatData;
         for (const prop of splatData.elements[0].properties) {
             size += prop.storage.byteLength;
         }

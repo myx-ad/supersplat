@@ -127,16 +127,7 @@ class AssetLoader {
 
             asset.on('load', () => {
                 // support loading 2d splats by adding scale_2 property with almost 0 scale
-                // Engine API variants seen in PlayCanvas:
-                // - resource.splatData
-                // - resource.gsplatData
-                // - resource is GSplatData directly
-                const res = asset.resource as { splatData?: GSplatData; gsplatData?: GSplatData } & GSplatData;
-                const splatData = res.splatData ?? res.gsplatData ?? res;
-                if (typeof (splatData as any).getProp !== 'function') {
-                    reject(new Error('Unsupported gsplat resource shape: missing getProp()'));
-                    return;
-                }
+                const splatData = (asset.resource as GSplatResource).splatData;
                 if (splatData.getProp('scale_0') && splatData.getProp('scale_1') && !splatData.getProp('scale_2')) {
                     const scale2 = new Float32Array(splatData.numSplats).fill(Math.log(1e-6));
                     splatData.addProp('scale_2', scale2);
