@@ -76,15 +76,23 @@ const toggleUi = () => {
 
 const addSplat = (scene: Scene, data: any) => {
     setTimeout(async () => {
-        // Twinviewer sends PLY via postMessage (data.tile = ArrayBuffer). Pass contents directly
-        // so the loader never fetches a URL — avoids blob URL / fetch quirks (e.g. in Docker).
-        const model = await scene.assetLoader.loadModel(
-            data.tile
-                ? { filename: data.path, contents: data.tile }
-                : { url: data.url, filename: data.path },
-        );
-        model.entity.setEulerAngles(-90, 180, 0);
-        scene.add(model);
+        let blobUrl: string | null = null;
+        try {
+            // For this PlayCanvas version, gsplat parser expects a fetch Response/body stream.
+            // Use a blob URL so parser goes through fetch(url) instead of raw ArrayBuffer contents.
+            blobUrl = data.tile ? URL.createObjectURL(new Blob([data.tile])) : null;
+            const model = await scene.assetLoader.loadModel(
+                blobUrl
+                    ? { url: blobUrl, filename: data.path }
+                    : { url: data.url, filename: data.path },
+            );
+            model.entity.setEulerAngles(-90, 180, 0);
+            scene.add(model);
+        } finally {
+            if (blobUrl) {
+                URL.revokeObjectURL(blobUrl);
+            }
+        }
     }, 0);
 };
 
