@@ -27,7 +27,7 @@
     "dependencies": {
         "@playcanvas/eslint-config": "^2.0.9",
         "@playcanvas/pcui": "^5.2.0",
-        "playcanvas": "^2.5.1"
+        "playcanvas": "2.5.1"
     },
     "peerDependencies": {
         "@playcanvas/pcui": "^5.2.0"

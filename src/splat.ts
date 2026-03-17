@@ -78,9 +78,12 @@ class Splat extends Element {
     constructor(asset: Asset) {
         super(ElementType.splat);
 
-        // Engine API: resource may be GSplatResource with .splatData, or the GSplatData directly (no wrapper).
-        const splatResource = asset.resource as GSplatResource & { splatData?: GSplatData };
-        const splatData = splatResource.splatData ?? (splatResource as unknown as GSplatData);
+        // Engine API variants seen in PlayCanvas:
+        // - resource.splatData
+        // - resource.gsplatData
+        // - resource is GSplatData directly
+        const splatResource = asset.resource as any;
+        const splatData = (splatResource.splatData ?? splatResource.gsplatData ?? splatResource) as GSplatData;
 
         // get material options object for a shader that renders with the given number of bands
         const materialOptions = {
@@ -92,7 +95,7 @@ class Splat extends Element {
         this.asset = asset;
         this.splatData = splatData;
         this.numSplats = splatData.numSplats;
-        this.entity = splatResource.instantiate(materialOptions);
+        this.entity = splatResource.instantiate(materialOptions) as Entity;
 
         const instance = this.entity.gsplat.instance;
 
