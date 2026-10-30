@@ -1,4 +1,4 @@
-FROM node:22.0-alpine AS builder
+FROM node:22.23.4-alpine AS builder
 
 ARG BASE_HREF="/supersplat/"
 ENV BASE_HREF=$BASE_HREF
@@ -11,7 +11,7 @@ RUN --mount=type=secret,id=npmrc,target=/root/.npmrc NPM_CONFIG_USERCONFIG=/root
 
 RUN npm run build
 
-FROM node:22.0-alpine
+FROM node:22.23.4-alpine
 LABEL authors="MYX AD"
 
 WORKDIR /app
